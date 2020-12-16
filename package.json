@@ -1,0 +1,51 @@
+{
+  "_from": "cordova-plugin-eli-sensor",
+  "_id": "cordova-plugin-eli-sensor@0.0.0",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/cordova-plugin-eli-sensor",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-eli-sensor",
+    "name": "cordova-plugin-eli-sensor",
+    "escapedName": "cordova-plugin-eli-sensor",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "",
+  "_shasum": "",
+  "_spec": "cordova-plugin-eli-sensor",
+  "_where": "",
+  "author": {
+    "name": "Elinous"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-eli-sensor",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova EliSensor Plugin",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "BSD",
+  "name": "cordova-plugin-eli-sensor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlkroeger/cordova-plugin-eli-sensor.git"
+  },
+  "version": "0.0.0"
+}

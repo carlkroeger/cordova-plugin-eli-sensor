@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-eli-sensor" version="0.1.4">
+
+  <name>EliSensor</name>
+  <description>Cordova EliSensor Plugin</description>
+  <author>Elinous</author>
+  <license>BSD</license>
+
+  <js-module src="www/SensorData.js" name="SensorData">
+    <clobbers target="SensorData"/>
+  </js-module>
+
+  <js-module src="www/eliSensor.js" name="eliSensor">
+    <clobbers target="navigator.eliSensor"/>
+  </js-module>
+
+  <!-- android -->
+  <platform name="android">
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="EliSensor">
+        <param name="android-package" value="com.android.plugins.EliSensor"/>
+      </feature>
+    </config-file>
+
+    <source-file src="src/android/com/android/plugins/EliSensor.java" target-dir="src/com/android/plugins"/>
+
+  </platform>
+
+  <!-- ios -->
+  <!-- <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="Sensor">
+        <param name="ios-package" value="CDVSensor"/>
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/CDVSensor.h"/>
+    <source-file src="src/ios/CDVSensor.m"/>
+
+    <framework src="CoreMotion.framework"/>
+  </platform> -->
+
+</plugin>
