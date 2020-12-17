@@ -198,11 +198,15 @@ var eliSensor = {
      * @param {String} id       The id of the watch returned from #watch.
      */
     clearWatch: function (id) {
+        console.log('clearWatch', id)
+        console.log('timers', timers)
         // Stop javascript timer & remove from timer list
         if (id && timers[id]) {
+            console.log('entro al if (id && timers[id])')
             window.clearInterval(timers[id].timer);
             removeListeners(timers[id].listeners);
             delete timers[id];
+            //stop();
 
             if (eventTimerId && Object.keys(timers).length === 0) {
                 // No more watchers, so stop firing 'devicemotion' events

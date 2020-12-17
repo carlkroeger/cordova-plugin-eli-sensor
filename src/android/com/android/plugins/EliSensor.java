@@ -4,6 +4,8 @@ package com.android.plugins;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
@@ -33,6 +35,17 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
     public static int STARTING = 1;
     public static int RUNNING = 2;
     public static int ERROR_FAILED_TO_START = 3;
+    Map<Integer, String> sensor_dict = new HashMap<Integer, String>() {{
+        put(1,"TYPE_ACCELEROMETER");
+        put(35,"TYPE_ACCELEROMETER_UNCALIBRATED");
+        put(4,"TYPE_GYROSCOPE");
+        put(16,"TYPE_GYROSCOPE_UNCALIBRATED");
+        put(2,"TYPE_MAGNETIC_FIELD");
+        put(14,"TYPE_MAGNETIC_FIELD_UNCALIBRATED");
+        put(11,"TYPE_ROTATION_VECTOR");
+        put(28,"TYPE_POSE_6DOF");
+        put(15,"TYPE_GAME_ROTATION_VECTOR");
+    }};
     private int SENSOR_TYPE;
     private JSONArray sensor_list;
     private JSONArray data;  // most recent sensor_data values
@@ -63,6 +76,7 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
      private int getSensorType(){
          return this.SENSOR_TYPE;
      }
+
      private void setSensorType(int sensor_type){
         this.SENSOR_TYPE = sensor_type;
         // if(sensor_type.equals("PROXIMITY")){
@@ -113,16 +127,16 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
      public void setSensorList(List<Sensor> list){
         try {        
             this.sensor_list = new JSONArray();
-            ArrayList<String> alreadyAdded = new ArrayList<String>();
+            ArrayList<Integer> alreadyAdded = new ArrayList<Integer>();
             for (Sensor sensor : list) {
-                String string_type = sensor.getStringType();
-                if(!alreadyAdded.contains(string_type))
+                Integer type = sensor.getType();
+                if(!alreadyAdded.contains(type) && this.sensor_dict.containsKey(type))
                 {
-                    alreadyAdded.add(string_type);
+                    alreadyAdded.add(type);
                     JSONObject json = new JSONObject();
-                    json.put("string_type", string_type);
-                    json.put("type", sensor.getType());
-                    json.put("name", sensor.getName());
+                    json.put("string_type", sensor.getStringType());
+                    json.put("type", type);
+                    json.put("name", this.sensor_dict.get(type));
                     this.sensor_list.put(json);
                 }
             }

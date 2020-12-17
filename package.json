@@ -1,6 +1,6 @@
 {
   "_from": "cordova-plugin-eli-sensor",
-  "_id": "cordova-plugin-eli-sensor@0.0.0",
+  "_id": "cordova-plugin-eli-sensor@0.1.0",
   "_inBundle": false,
   "_integrity": "",
   "_location": "/cordova-plugin-eli-sensor",
@@ -47,5 +47,5 @@
     "type": "git",
     "url": "git+https://github.com/carlkroeger/cordova-plugin-eli-sensor.git"
   },
-  "version": "0.0.0"
+  "version": "0.1.0"
 }
