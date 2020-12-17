@@ -3,6 +3,7 @@
 package com.android.plugins;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
@@ -33,7 +34,7 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
     public static int RUNNING = 2;
     public static int ERROR_FAILED_TO_START = 3;
     private int SENSOR_TYPE;
-
+    private JSONArray sensor_list;
     private JSONArray data;  // most recent sensor_data values
     private long timestamp;  // time of most recent value
     private int status;  // status of listener
@@ -62,47 +63,71 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
      private int getSensorType(){
          return this.SENSOR_TYPE;
      }
-     private void setSensorType(String sensor_type){         
-        if(sensor_type.equals("PROXIMITY")){
-            this.SENSOR_TYPE = Sensor.TYPE_PROXIMITY;
-        } else if(sensor_type.equals("ACCELEROMETER")){
-            this.SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
-        } else if(sensor_type.equals("GRAVITY")){
-            this.SENSOR_TYPE = Sensor.TYPE_GRAVITY;
-        } else if(sensor_type.equals("GYROSCOPE")){
-            this.SENSOR_TYPE = Sensor.TYPE_GYROSCOPE;
-        } else if(sensor_type.equals("GYROSCOPE_UNCALIBRATED")){
-            this.SENSOR_TYPE = Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
-        } else if(sensor_type.equals("LINEAR_ACCELERATION")){
-            this.SENSOR_TYPE = Sensor.TYPE_LINEAR_ACCELERATION;
-        } else if(sensor_type.equals("ROTATION_VECTOR")){
-            this.SENSOR_TYPE = Sensor.TYPE_ROTATION_VECTOR;
-        } else if(sensor_type.equals("SIGNIFICANT_MOTION")){
-            this.SENSOR_TYPE = Sensor.TYPE_SIGNIFICANT_MOTION;
-        } else if(sensor_type.equals("STEP_COUNTER")){
-            this.SENSOR_TYPE = Sensor.TYPE_STEP_COUNTER;
-        } else if(sensor_type.equals("STEP_DETECTOR")){
-            this.SENSOR_TYPE = Sensor.TYPE_STEP_DETECTOR;
-        } else if(sensor_type.equals("GAME_ROTATION_VECTOR")){
-            this.SENSOR_TYPE = Sensor.TYPE_GAME_ROTATION_VECTOR;
-        } else if(sensor_type.equals("GEOMAGNETIC_ROTATION_VECTOR")){
-            this.SENSOR_TYPE = Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR;
-        } else if(sensor_type.equals("MAGNETIC_FIELD")){
-            this.SENSOR_TYPE = Sensor.TYPE_MAGNETIC_FIELD;
-        } else if(sensor_type.equals("MAGNETIC_FIELD_UNCALIBRATED")){
-            this.SENSOR_TYPE = Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
-        } else if(sensor_type.equals("ORIENTATION")){
-            this.SENSOR_TYPE = Sensor.TYPE_ORIENTATION;
-        } else if(sensor_type.equals("AMBIENT_TEMPERATURE")){
-            this.SENSOR_TYPE = Sensor.TYPE_AMBIENT_TEMPERATURE;
-        } else if(sensor_type.equals("LIGHT")){
-            this.SENSOR_TYPE = Sensor.TYPE_LIGHT;
-        } else if(sensor_type.equals("PRESSURE")){
-            this.SENSOR_TYPE = Sensor.TYPE_PRESSURE;
-        } else if(sensor_type.equals("RELATIVE_HUMIDITY")){
-            this.SENSOR_TYPE = Sensor.TYPE_RELATIVE_HUMIDITY;
-        } else if(sensor_type.equals("TEMPERATURE")){
-            this.SENSOR_TYPE = Sensor.TYPE_TEMPERATURE;
+     private void setSensorType(int sensor_type){
+        this.SENSOR_TYPE = sensor_type;
+        // if(sensor_type.equals("PROXIMITY")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_PROXIMITY;
+        // } else if(sensor_type.equals("ACCELEROMETER")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_ACCELEROMETER;
+        // } else if(sensor_type.equals("GRAVITY")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_GRAVITY;
+        // } else if(sensor_type.equals("GYROSCOPE")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_GYROSCOPE;
+        // } else if(sensor_type.equals("GYROSCOPE_UNCALIBRATED")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_GYROSCOPE_UNCALIBRATED;
+        // } else if(sensor_type.equals("LINEAR_ACCELERATION")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_LINEAR_ACCELERATION;
+        // } else if(sensor_type.equals("ROTATION_VECTOR")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_ROTATION_VECTOR;
+        // } else if(sensor_type.equals("SIGNIFICANT_MOTION")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_SIGNIFICANT_MOTION;
+        // } else if(sensor_type.equals("STEP_COUNTER")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_STEP_COUNTER;
+        // } else if(sensor_type.equals("STEP_DETECTOR")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_STEP_DETECTOR;
+        // } else if(sensor_type.equals("GAME_ROTATION_VECTOR")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_GAME_ROTATION_VECTOR;
+        // } else if(sensor_type.equals("GEOMAGNETIC_ROTATION_VECTOR")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR;
+        // } else if(sensor_type.equals("MAGNETIC_FIELD")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_MAGNETIC_FIELD;
+        // } else if(sensor_type.equals("MAGNETIC_FIELD_UNCALIBRATED")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED;
+        // } else if(sensor_type.equals("ORIENTATION")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_ORIENTATION;
+        // } else if(sensor_type.equals("AMBIENT_TEMPERATURE")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_AMBIENT_TEMPERATURE;
+        // } else if(sensor_type.equals("LIGHT")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_LIGHT;
+        // } else if(sensor_type.equals("PRESSURE")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_PRESSURE;
+        // } else if(sensor_type.equals("RELATIVE_HUMIDITY")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_RELATIVE_HUMIDITY;
+        // } else if(sensor_type.equals("TEMPERATURE")){
+        //     this.SENSOR_TYPE = Sensor.TYPE_TEMPERATURE;
+        // }
+     }
+     public JSONArray getSensorList(){
+         return this.sensor_list;
+     }
+     public void setSensorList(List<Sensor> list){
+        try {        
+            this.sensor_list = new JSONArray();
+            ArrayList<String> alreadyAdded = new ArrayList<String>();
+            for (Sensor sensor : list) {
+                String string_type = sensor.getStringType();
+                if(!alreadyAdded.contains(string_type))
+                {
+                    alreadyAdded.add(string_type);
+                    JSONObject json = new JSONObject();
+                    json.put("string_type", string_type);
+                    json.put("type", sensor.getType());
+                    json.put("name", sensor.getName());
+                    this.sensor_list.put(json);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
      }
 
@@ -117,6 +142,7 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         this.sensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
+        this.setSensorList(this.sensorManager.getSensorList(Sensor.TYPE_ALL));
     }
 
     /**
@@ -128,9 +154,14 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
      * @return              Whether the action was valid.
      */
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
-        if (action.equals("start")) {            
+        if (action.equals("sensor_list")) {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, this.sensor_list);
+            result.setKeepCallback(true);
+            callbackContext.sendPluginResult(result);
+            return true;
+        } else if (action.equals("start")) {            
             try {
-                String sensor_type = args.getString(0);
+                int sensor_type = args.getInt(0);
                 this.setSensorType(sensor_type);
             } catch (JSONException e) {
                 e.printStackTrace();

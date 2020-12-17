@@ -24,6 +24,9 @@ var eventTimerId = null;
 // Last returned sensor_data object from native
 var sensor_data = null;
 
+//List of available sensors
+var sensor_list = null;
+
 // Tells native to start.
 function start(sensor_type) {
     exec(function (a) {
@@ -47,6 +50,22 @@ function stop() {
     running = false;
 }
 
+// Get sensor list.
+function sensorList() {
+    exec(function (a) {
+        var tempListeners = listeners.slice(0);
+        sensor_list = a;
+        for (var i = 0, l = tempListeners.length; i < l; i++) {
+            tempListeners[i].win(sensor_list);
+        }
+    }, function (e) {
+        var tempListeners = listeners.slice(0);
+        for (var i = 0, l = tempListeners.length; i < l; i++) {
+            tempListeners[i].fail(e);
+        }
+    }, "EliSensor", "sensor_list", []);
+}
+
 // Adds a callback pair to the listeners array
 function createCallbackPair(win, fail) {
     return { win: win, fail: fail };
@@ -65,6 +84,32 @@ function removeListeners(l) {
 
 var eliSensor = {
     /**
+     * Asynchronously acquires the sensor_list.
+     *
+     * @param {Function} successCallback    The function to call when the sensor_list data is available
+     * @param {Function} errorCallback      The function to call when there is an error getting the sensor_list data. (OPTIONAL)
+     */
+    getSensorList: function (successCallback, errorCallback) {
+        argscheck.checkArgs('fFO', 'eliSensor.getSensorList', arguments);
+
+        var p;
+        var win = function (a) {
+            removeListeners(p);
+            successCallback(a);
+        };
+        var fail = function (e) {
+            removeListeners(p);
+            errorCallback && errorCallback(e);
+        };
+
+        p = createCallbackPair(win, fail);
+        listeners.push(p);
+
+        if (!running) {
+            sensorList();
+        }
+    },
+    /**
      * Asynchronously acquires the current sensor_data.
      *
      * @param {Function} successCallback    The function to call when the sensor_data data is available
@@ -74,7 +119,7 @@ var eliSensor = {
     getCurrent: function (successCallback, errorCallback, options) {
         argscheck.checkArgs('fFO', 'eliSensor.getCurrent', arguments);
 
-        var sensor_type = (options && options.sensor_type && typeof options.sensor_type == 'string') ? options.sensor_type : "ROTATION_VECTOR";
+        var sensor_type = (options && options.sensor_type && typeof options.sensor_type == 'number') ? options.sensor_type : -1;
 
         var p;
         var win = function (a) {
@@ -106,7 +151,7 @@ var eliSensor = {
         argscheck.checkArgs('fFO', 'eliSensor.watch', arguments);
         // Default interval (10 sec)
         var frequency = (options && options.frequency && typeof options.frequency == 'number') ? options.frequency : 10000;
-        var sensor_type = (options && options.sensor_type && typeof options.sensor_type == 'string') ? options.sensor_type : "ROTATION_VECTOR";
+        var sensor_type = (options && options.sensor_type && typeof options.sensor_type == 'number') ? options.sensor_type : -1;
 
         // Keep reference to watch id, and report sensor_data readings as often as defined in frequency
         var id = utils.createUUID();
