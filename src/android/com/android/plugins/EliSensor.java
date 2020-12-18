@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.Math;
 
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
@@ -317,9 +318,19 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
 
                 // Save time that event was received
                 this.timestamp = System.currentTimeMillis();
-                JSONArray data = new JSONArray();
-                for(int i=0;i<event.values.length;i++){
-                    data.put(Float.parseFloat(event.values[i]+""));
+                JSONArray data = new JSONArray(); /*para retornar como json*/
+                if(event.sensor.getType() == 11 || event.sensor.getType() == 15){
+                    /*rotation vectors deben ser convertidos a angulos*/
+                    float[] vectorInDegrees = this.calculateAngles(event.values);
+                    /*y luego añadidos al json*/
+                    for(int i=0;i<vectorInDegrees.length;i++){
+                        data.put(Float.parseFloat(vectorInDegrees[i]+""));
+                    }
+                }else{
+                    /*añadir resultado del sensor al json*/
+                    for(int i=0;i<event.values.length;i++){
+                        data.put(Float.parseFloat(event.values[i]+""));
+                    }
                 }
                 this.data = data;
 
@@ -328,6 +339,23 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    public float[] calculateAngles(float[] rVector){
+        float[] result = new float[3];
+        float[] rMatrix = new float[9]; // para recibir la matriz
+        //caculate rotation matrix from rotation vector first
+        SensorManager.getRotationMatrixFromVector(rMatrix, rVector);
+    
+        //calculate Euler angles now
+        SensorManager.getOrientation(rMatrix, result);
+    
+        //The results are in radians, need to convert it to degrees
+
+        /**convert result to degrees**/
+        for (int i = 0; i < result.length; i++){
+            result[i] = Math.round(Math.toDegrees(result[i]));
+        }
+        return result;
     }
 
     /**
