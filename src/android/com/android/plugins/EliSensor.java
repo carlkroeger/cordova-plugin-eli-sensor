@@ -41,10 +41,10 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
         //put(35,"TYPE_ACCELEROMETER_UNCALIBRATED");
         put(4,"TYPE_GYROSCOPE");
         //put(16,"TYPE_GYROSCOPE_UNCALIBRATED");
-        put(2,"TYPE_MAGNETIC_FIELD");
+        //put(2,"TYPE_MAGNETIC_FIELD");
         //put(14,"TYPE_MAGNETIC_FIELD_UNCALIBRATED");
         put(11,"TYPE_ROTATION_VECTOR");
-        put(28,"TYPE_POSE_6DOF");
+        //put(28,"TYPE_POSE_6DOF");
         put(15,"TYPE_GAME_ROTATION_VECTOR");
     }};
     private int SENSOR_TYPE;

@@ -105,9 +105,7 @@ var eliSensor = {
         p = createCallbackPair(win, fail);
         listeners.push(p);
 
-        if (!running) {
-            sensorList();
-        }
+        sensorList();
     },
     /**
      * Asynchronously acquires the current sensor_data.
