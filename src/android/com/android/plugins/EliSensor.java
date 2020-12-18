@@ -38,11 +38,11 @@ public class EliSensor extends CordovaPlugin implements SensorEventListener {
     public static int ERROR_FAILED_TO_START = 3;
     Map<Integer, String> sensor_dict = new HashMap<Integer, String>() {{
         put(1,"TYPE_ACCELEROMETER");
-        put(35,"TYPE_ACCELEROMETER_UNCALIBRATED");
+        //put(35,"TYPE_ACCELEROMETER_UNCALIBRATED");
         put(4,"TYPE_GYROSCOPE");
-        put(16,"TYPE_GYROSCOPE_UNCALIBRATED");
+        //put(16,"TYPE_GYROSCOPE_UNCALIBRATED");
         put(2,"TYPE_MAGNETIC_FIELD");
-        put(14,"TYPE_MAGNETIC_FIELD_UNCALIBRATED");
+        //put(14,"TYPE_MAGNETIC_FIELD_UNCALIBRATED");
         put(11,"TYPE_ROTATION_VECTOR");
         put(28,"TYPE_POSE_6DOF");
         put(15,"TYPE_GAME_ROTATION_VECTOR");
