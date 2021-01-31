@@ -4,14 +4,6 @@
 
 @interface CDVEliSensor : CDVPlugin
 {
-    double x;
-    double y;
-    double z;
-    int sensor_type;
-    __unsafe_unretained NSDictionary *sensor_dict;
-    __unsafe_unretained NSMutableDictionary *sensor_list;
-    __unsafe_unretained NSMutableArray *sensor_list2;
-    __unsafe_unretained NSArray *data;
     NSTimeInterval timestamp;
 }
 
