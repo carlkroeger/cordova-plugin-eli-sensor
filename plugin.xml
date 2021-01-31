@@ -30,9 +30,9 @@
   </platform>
 
   <!-- ios -->
-  <!-- <platform name="ios">
+  <platform name="ios">
     <config-file target="config.xml" parent="/*">
-      <feature name="Sensor">
+      <feature name="EliSensor">
         <param name="ios-package" value="CDVSensor"/>
       </feature>
     </config-file>
@@ -41,6 +41,6 @@
     <source-file src="src/ios/CDVSensor.m"/>
 
     <framework src="CoreMotion.framework"/>
-  </platform> -->
+  </platform>
 
 </plugin>
