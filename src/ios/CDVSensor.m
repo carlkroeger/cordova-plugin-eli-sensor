@@ -9,12 +9,16 @@
 @property (readwrite, assign) double x;
 @property (readwrite, assign) double y;
 @property (readwrite, assign) double z;
+@property (readwrite, assign) NSDictionary *sensor_dict;
+@property (readwrite, assign) NSDictionary *sensor_data;
+@property (readwrite, assign) NSDictionary *data;
+@property (readwrite, assign) int sensor_type;
 @property (readwrite, assign) NSTimeInterval timestamp;
 @end
 
 @implementation CDVEliSensor
 
-@synthesize callbackId, isRunning, x, y, z, timestamp;
+@synthesize callbackId, isRunning, x, y, z, sensor_dict,sensor_type, timestamp;
 
 // defaults to 10 msec
 #define kAccelerometerInterval 10
@@ -26,6 +30,7 @@
         self.x = 0;
         self.y = 0;
         self.z = 0;
+        self.sensor_dict = @{ @"1" : @"TYPE_ACCELEROMETER", @"4" : @"TYPE_GYROSCOPE",@"15" : @"TYPE_GAME_ROTATION_VECTOR"};
         self.timestamp = 0;
         self.callbackId = nil;
         self.isRunning = NO;
@@ -49,12 +54,14 @@
     {
         self.motionManager = [[CMMotionManager alloc] init];
     }
-
-    if ([self.motionManager isSensorAvailable] == YES) {
+    NSLog(@"motion manager");
+    NSLog(@"%@",self.motionManager);
+    NSLog(@"fin motion manager");
+    if ([self.motionManager isGyroAvailable] == YES) {
         // Assign the update interval to the motion manager and start updates
-        [self.motionManager setSensorUpdateInterval:kAccelerometerInterval/1000];
+        [self.motionManager setGyroUpdateInterval:kAccelerometerInterval/1000];
         __weak CDVEliSensor* weakSelf = self;
-        [self.motionManager startSensorUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMSensorData *sensorData, NSError *error) {
+        [self.motionManager startGyroUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMGyroData *sensorData, NSError *error) {
             weakSelf.x = sensorData.rotationRate.x;
             weakSelf.y = sensorData.rotationRate.y;
             weakSelf.z = sensorData.rotationRate.z;
@@ -82,7 +89,7 @@
 
 - (void)stop:(CDVInvokedUrlCommand*)command
 {
-    if ([self.motionManager isSensorAvailable] == YES) {
+    if ([self.motionManager isGyroAvailable] == YES) {
         if (self.haveReturnedResult == NO) {
             // block has not fired before stop was called, return whatever result we currently have
             [self returnSensorInfo];

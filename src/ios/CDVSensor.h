@@ -7,6 +7,10 @@
     double x;
     double y;
     double z;
+    int sensor_type;
+    NSDictionary *sensor_dict;
+    NSDictionary *sensor_data;
+    NSDictionary *data;
     NSTimeInterval timestamp;
 }
 
