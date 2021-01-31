@@ -33,12 +33,12 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="EliSensor">
-        <param name="ios-package" value="CDVSensor"/>
+        <param name="ios-package" value="CDVEliSensor"/>
       </feature>
     </config-file>
 
-    <header-file src="src/ios/CDVSensor.h"/>
-    <source-file src="src/ios/CDVSensor.m"/>
+    <header-file src="src/ios/CDVEliSensor.h"/>
+    <source-file src="src/ios/CDVEliSensor.m"/>
 
     <framework src="CoreMotion.framework"/>
   </platform>
