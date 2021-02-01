@@ -1,4 +1,3 @@
-
 #import <CoreMotion/CoreMotion.h>
 #import "CDVEliSensor.h"
 
@@ -59,12 +58,12 @@
                                 [NSNumber numberWithFloat:accelerometerData.acceleration.x],
                                 [NSNumber numberWithFloat:accelerometerData.acceleration.y],
                                 [NSNumber numberWithFloat:accelerometerData.acceleration.z],
-                                , nil];
-      NSNumber timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
-      //[weakSelf returnSensorInfo];
-      NSMutableDictionary* return_dict = [NSMutableDictionary dictionaryWithCapacity:2];
-      [return_dict setValue:[data_result] forKey:@"data"];
-      [return_dict setValue:[timestamp] forKey:@"timestamp"];
+                                 nil];
+    NSTimeInterval timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
+    //[weakSelf returnSensorInfo];
+    NSMutableDictionary* return_dict = [NSMutableDictionary dictionaryWithCapacity:2];
+    [return_dict setObject: data_result forKey:@"data"];
+    [return_dict setValue:[NSNumber numberWithDouble: timestamp] forKey:@"timestamp"];
       // debería retornar: "{ data: array_resultados, timestamp: 12984378798 }""
       CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:return_dict];
       [result setKeepCallback:[NSNumber numberWithBool:YES]];
@@ -77,17 +76,17 @@
   }else if([s_type intValue] == 4 && [self.motionManager isGyroAvailable] == YES) {
     // Assign the update interval to the motion manager and start updates
     [self.motionManager setGyroUpdateInterval:kUpdateInterval/1000];
-    __weak CDVEliSensor* weakSelf = self;
+//    __weak CDVEliSensor* weakSelf = self;
     [self.motionManager startGyroUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMGyroData *gyroData, NSError *error) {
       NSArray* data_result = [[NSArray alloc] initWithObjects:
                                 [NSNumber numberWithFloat:gyroData.rotationRate.x],
                                 [NSNumber numberWithFloat:gyroData.rotationRate.y],
-                                [NSNumber numberWithFloat:gyroData.rotationRate.z],
-      NSNumber timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
+                              [NSNumber numberWithFloat:gyroData.rotationRate.z],nil];
+      NSTimeInterval timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
       //[weakSelf returnSensorInfo];
       NSMutableDictionary* return_dict = [NSMutableDictionary dictionaryWithCapacity:2];
-      [return_dict setValue:[data_result] forKey:@"data"];
-      [return_dict setValue:[timestamp] forKey:@"timestamp"];
+      [return_dict setObject: data_result forKey:@"data"];
+      [return_dict setValue:[NSNumber numberWithDouble: timestamp] forKey:@"timestamp"];
       // debería retornar: "{ data: array_resultados, timestamp: 12984378798 }""
       CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:return_dict];
       [result setKeepCallback:[NSNumber numberWithBool:YES]];
@@ -101,30 +100,29 @@
     // Assign the update interval to the motion manager and start updates
     [self.motionManager setDeviceMotionUpdateInterval:kUpdateInterval/1000];
     //__weak CDVEliSensor* weakSelf = self;
-    [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotionData *motionData, NSError *error) {      
-      // Get the attitude of the device
-      //CMAttitude *attitude = motion.attitude;
-      // Get the pitch (in radians) and convert to degrees.                                          
-      //NSLog(@"%f", attitude.pitch * 180.0/M_PI);
-      NSArray* data_result = [[NSArray alloc] initWithObjects:
-                                [NSNumber numberWithFloat:motionData.attitude.yaw * 180.0 / M_PI],
-                                [NSNumber numberWithFloat:motionData.attitude.pitch * 180.0 / M_PI],
-                                [NSNumber numberWithFloat:motionData.attitude.roll * 180.0 / M_PI],
-      NSNumber timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
-      //[weakSelf returnSensorInfo];
-      NSMutableDictionary* return_dict = [NSMutableDictionary dictionaryWithCapacity:2];
-      [return_dict setValue:[data_result] forKey:@"data"];
-      [return_dict setValue:[timestamp] forKey:@"timestamp"];
-      // debería retornar: "{ data: array_resultados, timestamp: 12984378798 }""
-      CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:return_dict];
-      [result setKeepCallback:[NSNumber numberWithBool:YES]];
-      [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
-      self.haveReturnedResult = YES;
-    }];
+      [self.motionManager startDeviceMotionUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motionData, NSError *error) {
+          NSArray* data_result = [[NSArray alloc] initWithObjects:
+                            [NSNumber numberWithFloat:motionData.attitude.yaw * 180.0 / M_PI],
+                            [NSNumber numberWithFloat:motionData.attitude.pitch * 180.0 / M_PI],
+                                  [NSNumber numberWithFloat:motionData.attitude.roll * 180.0 / M_PI],nil];
+        NSTimeInterval timestamp = ([[NSDate date] timeIntervalSince1970] * 1000);
+        //[weakSelf returnSensorInfo];
+        NSMutableDictionary* return_dict = [NSMutableDictionary dictionaryWithCapacity:2];
+        [return_dict setObject: data_result forKey:@"data"];
+        [return_dict setValue:[NSNumber numberWithDouble: timestamp] forKey:@"timestamp"];
+          // debería retornar: "{ data: array_resultados, timestamp: 12984378798 }""
+          CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:return_dict];
+          [result setKeepCallback:[NSNumber numberWithBool:YES]];
+          [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
+          self.haveReturnedResult = YES;
+
+
+      }];
+
     if (!self.isRunning) {
       self.isRunning = YES;
     }
-  }else{  
+  }else{
     NSLog(@"Running in Simulator? All sensor tests will fail.");
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"Error. EliSensor Not Available."];
     [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
