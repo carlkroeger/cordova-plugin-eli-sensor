@@ -25,6 +25,7 @@
         self.isRunning = NO;
         self.haveReturnedResult = YES;
         self.motionManager = nil;
+        [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
     }
     return self;
 }
